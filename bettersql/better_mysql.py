@@ -1,5 +1,4 @@
 import mysql.connector
-import pandas as pd
 from autocomp import Wordcompleter
 import getpass
 import sys
@@ -14,14 +13,14 @@ class SQLEngine:
                                                     host = host,
                                                     user = user,
                                                     password = passwd
-                                                    )
+                                                )
             if self.conn.is_connected():
-                print("bmysql>>Connection successful!")
+                print("Connection successful!")
             else:
-                print("bmysql>>Connection failed")
+                print("Connection failed")
                 sys.exit()
         except mysql.connector.Error as err:
-            print(f"bmysql>>Connection error: {err}")
+            print(f"Connection error: {err}")
             sys.exit()
             
         self.curr = self.conn.cursor()
@@ -31,7 +30,7 @@ class SQLEngine:
         try:
             self.curr.execute(query)
             if query.startswith("select") or query.startswith("show"):
-                n = 0
+                print()
                 for row in self.curr.fetchall():
                     print(row)
                 print()
@@ -39,10 +38,6 @@ class SQLEngine:
                 self.conn.commit()
         except mysql.connector.Error as err:
             print(err)
-        
-    def commit(self):
-        self.conn.commit()
-        print("bmysql>>Committed")
         
 def main():
     
@@ -101,8 +96,10 @@ def main():
         
     if ac.lower().strip() == 'y' or ac.lower().strip() == '':
         ac = True
+        print("Autocommit enabled")
     else:
         ac = False
+        print("Autocommit not enabled")
     
     sqleng = SQLEngine(host, user, passwd, autocommit = ac)
     
