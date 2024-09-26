@@ -6,16 +6,18 @@ import os
 
 class SQLEngine:
     
-    def __init__(self, host, user, passwd, autocommit):
+    def __init__(self, host, user, passwd, database, autocommit):
         
         try:
             self.conn = mysql.connector.connect(
                                                     host = host,
                                                     user = user,
-                                                    password = passwd
+                                                    password = passwd,
+                                                    database = database
                                                 )
             if self.conn.is_connected():
                 print("Connection successful!")
+                print(f"Current database: {database}")
             else:
                 print("Connection failed")
                 sys.exit()
@@ -86,6 +88,7 @@ def main():
     host = input("host: ")
     user = input("user: ")
     passwd = getpass.getpass(prompt = "password: ")
+    database = input("database: ")
     ac = input("Enable autocommit (y/n): ")
     
     if host.strip() == "":
@@ -94,6 +97,9 @@ def main():
     if user.strip() == "":
         user = "root"
         
+    if database.strip() == "":
+        database = None
+        
     if ac.lower().strip() == 'y' or ac.lower().strip() == '':
         ac = True
         print("Autocommit enabled")
@@ -101,9 +107,9 @@ def main():
         ac = False
         print("Autocommit not enabled")
     
-    sqleng = SQLEngine(host, user, passwd, autocommit = ac)
+    sqleng = SQLEngine(host, user, passwd, database, ac)
     
-    print()
+    print("\n'quit' - exit\n'clr' - clear screen\n")
     
     while True:
         query = wc.prompt(prompt_ = "bmysql>>")
