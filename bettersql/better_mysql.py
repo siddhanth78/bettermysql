@@ -16,13 +16,13 @@ class SQLEngine:
                                                     database = database
                                                 )
             if self.conn.is_connected():
-                print("Connection successful!")
+                print("\nConnection successful!")
                 print(f"Current database: {database}")
             else:
-                print("Connection failed")
+                print("\nConnection failed")
                 sys.exit()
         except mysql.connector.Error as err:
-            print(f"Connection error: {err}")
+            print(f"\nConnection error: {err}")
             sys.exit()
             
         self.curr = self.conn.cursor()
@@ -31,7 +31,7 @@ class SQLEngine:
     def execute(self, query):
         try:
             self.curr.execute(query)
-            if query.startswith("select") or query.startswith("show"):
+            if query.startswith("select") or query.startswith("show") or query.startswith("desc"):
                 print()
                 for row in self.curr.fetchall():
                     print(row)
@@ -131,7 +131,7 @@ def main():
                 subq = wc.prompt(prompt_ = "     ->")
                 query = query + subq + " "
                 
-        query = query.strip(";")
+        query = query.strip(";").strip()
 
         sqleng.execute(query)
 
